@@ -35,7 +35,7 @@
     
   - name: Buscando arquivo API desenvolvido em Python
     git:
-      repo: 'https://github.com/donnydavis/ansible-api'
+      repo: 'https://github.com/gogomafra/api_rest/blob/master/api_rest.py'
       dest: /api_rest/my_api
   
   - name: Executando a chamada da API configurada já na porta 8080 conforme sintaxe do mesmo.
