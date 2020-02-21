@@ -1,0 +1,49 @@
+---
+- name: Buscando pacotes para instalação da API em Python
+  hosts: localhost
+  remote_user: automation
+  tasks:
+  yum: name={{ item }} update_cache=yes state=present
+  with_items:
+    - python3-pip
+  
+  - name: Instalando pacote
+    yum: name=python3-pip update_cache=yes state=present
+ 
+  - name: Garantindo a atualização do pacote pip
+    shell: pip install --upgrade pip
+    register: update_pip
+    
+  - debug: 
+      var: update_pip
+  
+  - name: Instalando os componentes do Flask para subida da API
+    shell: pip3 install flask flask-jsonpify flask-sqlalchemy flask-restful virtualenv
+    register: pip_flask
+    
+  - debug:
+      var: pip_flask
+  
+  - name: Definindo diretorio da API
+    file: 
+      path: api_rest
+      state: directory
+      owner: automation
+      group: automation
+      mode: '0774'
+    shell: virtualenv flask
+    
+  - name: Buscando arquivo API desenvolvido em Python
+    git:
+      repo: 'https://github.com/donnydavis/ansible-api'
+      dest: /api_rest/my_api
+  
+  - name: Executando a chamada da API configurada já na porta 8080 conforme sintaxe do mesmo.
+    shell: /api_rest/my_api/app.py
+    register: api_test
+    
+  - debug:
+      var: api_test
+
+    
+    
